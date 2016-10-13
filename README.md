@@ -1,0 +1,96 @@
+# trace-log
+
+Terrible name, but hey, hard to come up with a good name for a logging library. My motivation for writing this was to create a logging class that would wrap my calls to stdout or stderr and provide a context to the log message. e.g. rather than;
+
+```
+// File testFile.js
+var logger = require('debug')('MyLibrary');
+
+var testFunction = function(){
+	logger('doing some stuff');
+};
+```
+
+Which would generated the following debug output;
+
+`MyLibrary doing some stuff +0ms`
+
+I wanted the logging framework to provide more context to the log output, so you could work out which file or function a log entry was coming from. I wanted a log output more like this;
+
+`MyLibrary testFile.js>testFunction() [DEBUG]: doing some stuff +0ms`
+
+
+## Getting Started
+
+The code is available from github. You can clone it from there or you can install it with npm if using it as a dependency of something you're building.
+
+### Prerequisities
+
+You will need to have nodejs and npm installed to use this library.
+
+### Installing
+
+If cloning the repository manually you will need to run  `npm install` in the trace-log repository directory, this will download and install all the dependent libraries in the node_modules directory.
+
+If installing as a dependency of something you're building run the following command in your project's route directory; that in which your package.json exists.
+
+`npm install --save github:BohoCode/trace-log`
+
+
+## Running the tests
+
+There are some mocha tests included. To run these;
+`npm run test`
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give 
+
+an example
+```
+## Usage
+To use in your code;
+
+```
+// File testFile.js
+#require the library
+var Logger = require('trace-log');
+
+#Set the libary name and global log level
+Logger.setGlobalDefaults("people-modeller", Logger.LEVEL.INFO);
+
+#Create a logger
+var logger = new Logger('Person.js');
+logger.trace("Loading module");
+var Person = function(name){
+	var personLogger = logger.getSubModuleLogger('Person');
+	personLogger.trace("name is %s", name);
+};
+
+module.export = Person;
+
+```
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+
+## Authors
+
+* **Jamie Bowen** - *Initial work* - [BohoCode](https://github.com/BohoCode)
+
+See also the list of [contributors](https://github.com/BohoCode/trace-log/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Thanks to sunny days. 

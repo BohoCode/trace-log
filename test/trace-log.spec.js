@@ -22,26 +22,25 @@ var expect = require('chai').expect;
 var Logger = require("../trace-log");
 var sinon  = require("sinon");
 
-
 const LIB_NAME = "TestLibrary";
 const TEST_LOG_STRING = "Test log string";
 const TEST_LOG_NAME = "TestModule";
 const SUB_MODULE_NAME = "SubModule";
 
 /*jshint esversion: 6 */
-describe('setGlobalDefaults()', function () {
+describe('trace-log', function () {
 
-    beforeEach(function() {
+    beforeEach(function () {
         sinon.stub(console, "log").returns(void 0);
         sinon.stub(console, "error").returns(void 0);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         console.log.restore();
         console.error.restore();
     });
 
-    it("info log messages should be written when global default log level is set to INFO", function(){
+    it("info log messages should be written when global default log level is set to INFO", function () {
         Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
         var logger = new Logger(TEST_LOG_NAME);
         logger.info(TEST_LOG_STRING);
@@ -52,7 +51,7 @@ describe('setGlobalDefaults()', function () {
         expect(console.log.getCall(0).args[0]).to.contain("[INFO]")
     });
 
-    it("error log messages should be written when global default log level is set to INFO", function(){
+    it("error log messages should be written when global default log level is set to INFO", function () {
         Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
         var logger = new Logger(TEST_LOG_NAME);
         logger.error(TEST_LOG_STRING);
@@ -63,7 +62,7 @@ describe('setGlobalDefaults()', function () {
         expect(console.error.getCall(0).args[0]).to.contain("[ERROR]")
     });
 
-    it("debug log messages should NOT be written when global default log level is set to INFO", function(){
+    it("debug log messages should NOT be written when global default log level is set to INFO", function () {
         Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
         var logger = new Logger(TEST_LOG_NAME);
         logger.debug(TEST_LOG_STRING);
@@ -71,7 +70,7 @@ describe('setGlobalDefaults()', function () {
         expect(console.log.called).to.be.false;
     });
 
-    it("debug log messages should be written when global default log level is set to INFO but local logger is TRACE", function(){
+    it("debug log messages should be written when global default log level is set to INFO but local logger is TRACE", function () {
         Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
         var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
         logger.debug(TEST_LOG_STRING);
@@ -82,7 +81,7 @@ describe('setGlobalDefaults()', function () {
         expect(console.log.getCall(0).args[0]).to.contain("[DEBUG]")
     });
 
-    it("includes the subModuleName when obtaining a sub logger from a logger.", function(){
+    it("includes the subModuleName when obtaining a sub logger from a logger.", function () {
         Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
         var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
         var subModuleLogger = logger.getSubModuleLogger(SUB_MODULE_NAME);

@@ -25,7 +25,10 @@ class Logger {
     static setGlobalDefaults(libraryName, logLevel) {
         Logger.defaultLogLevel = logLevel;
         Logger.libraryName = libraryName;
-        Logger.debug = require('debug')('libraryName');
+        Logger.debug = require('debug')(libraryName);
+        Logger.debug.log = console.log.bind(console);
+        Logger.error = require('debug')(libraryName);
+        Logger.error.log = console.error.bind(console);
     };
 
     constructor(moduleName, localLogLevel){
@@ -78,9 +81,9 @@ class Logger {
             var providedLogMessage = vsprintf(template, args);
             var strLevel = "[" + this.getStringLogLevel(logLevel) + "] ";
             if(logLevel <= Logger.LEVEL.ERROR){
-                console.error(strLevel + Logger.libraryName + " " + this.moduleName + ": " + providedLogMessage);
+                Logger.error(strLevel + " " + this.moduleName + ": " + providedLogMessage);
             }else{
-                console.log(strLevel + Logger.libraryName + " " + this.moduleName + ": " + providedLogMessage);
+                Logger.debug(strLevel + " " + this.moduleName + ": " + providedLogMessage);
             }
         }
     }
