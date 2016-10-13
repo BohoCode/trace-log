@@ -42,6 +42,9 @@ If installing as a dependency of something you're building run the following com
 There are some mocha tests included. To run these;
 `npm run test`
 
+This library also uses the 'debug' library and no logging will be made unless the environment variable `DEBUG` is set so that output will be made. For the purpose of running the tests you can enable all debug;
+`export DEBUG=*`
+
 ### Break down into end to end tests
 
 Explain what these tests test and why
