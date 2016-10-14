@@ -76,8 +76,13 @@ class Logger {
         if(typeof this.localLogLevel !== 'undefined'){
             validLogLevel = this.localLogLevel;
         }
-        if(logLevel <= validLogLevel){
 
+        if((typeof args !== 'undefined') && (typeof args !== 'array')){
+            var newArgs = [args];
+            args = newArgs;
+        }
+
+        if(logLevel <= validLogLevel){
             var providedLogMessage = vsprintf(template, args);
             var strLevel = "[" + this.getStringLogLevel(logLevel) + "] ";
             if(logLevel <= Logger.LEVEL.ERROR){
@@ -108,5 +113,6 @@ Logger.LEVEL = {
 
 Logger.defaultLogLevel = Logger.LEVEL.DEBUG;
 Logger.libraryName = "call Logger.globalValues() to set library name and global log level";
+
 
 module.exports = Logger;

@@ -94,4 +94,23 @@ describe('trace-log', function () {
         expect(console.log.getCall(0).args[0]).to.contain("[DEBUG]")
     });
 
+
+    it("does substitution correctly.", function(){
+        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.DEBUG);
+        var logger = new Logger(TEST_LOG_NAME);
+        var thing = 'thing';
+        var statusCode = {statusCode:401, message: "oops"};
+        logger.info("The %s has just returned an error code of %s", [thing, statusCode]);
+        expect(console.log.getCall(0).args[0]).to.contain(thing);
+        expect(console.log.getCall(0).args[0]).to.contain(statusCode.toString());
+    });
+
+    it("works if one arg passed.", function(){
+        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.DEBUG);
+        var logger = new Logger(TEST_LOG_NAME);
+        var thing = 'thing';
+        var statusCode = {statusCode:401, message: "oops"};
+        logger.info("The thing is", thing);
+        expect(console.log.getCall(0).args[0]).to.contain(thing);
+    });
 });
