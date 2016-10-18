@@ -23,7 +23,11 @@ var vsprintf = require("sprintf-js").vsprintf;
 class Logger {
 
     static setGlobalDefaults(libraryName, logLevel) {
-        Logger.defaultLogLevel = logLevel;
+        Logger.defaultLogLevel = Logger.LEVEL[logLevel];
+        if(typeof Logger.defaultLogLevel === 'undefined'){
+            Console.error("Unrecognised logLevel " + logLevel + "Defaulting to INFO");
+            Logger.defaultLogLevel = Logger.LEVEL.INFO;
+        }
         Logger.libraryName = libraryName;
         Logger.debug = require('debug')(libraryName);
         Logger.debug.log = console.log.bind(console);
@@ -33,7 +37,8 @@ class Logger {
 
     constructor(moduleName, localLogLevel){
         this.moduleName = moduleName;
-        if(typeof localLogLevel !== 'undefined' && localLogLevel >= Logger.LEVEL.FATAL && localLogLevel <= Logger.LEVEL.TRACE) {
+        var logLevel = Logger.LEVEL[localLogLevel];
+        if(typeof localLogLevel !== 'undefined') {
             this.localLogLevel = localLogLevel;
         }
     }
