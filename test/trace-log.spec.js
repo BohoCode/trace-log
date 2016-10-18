@@ -41,7 +41,7 @@ describe('trace-log', function () {
     });
 
     it("info log messages should be written when global default log level is set to INFO", function () {
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME);
         logger.info(TEST_LOG_STRING);
         expect(console.log.called).to.be.true;
@@ -52,7 +52,7 @@ describe('trace-log', function () {
     });
 
     it("error log messages should be written when global default log level is set to INFO", function () {
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME);
         logger.error(TEST_LOG_STRING);
         expect(console.error.called).to.be.true;
@@ -63,7 +63,7 @@ describe('trace-log', function () {
     });
 
     it("debug log messages should NOT be written when global default log level is set to INFO", function () {
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME);
         logger.debug(TEST_LOG_STRING);
         expect(console.error.called).to.be.false;
@@ -71,7 +71,7 @@ describe('trace-log', function () {
     });
 
     it("debug log messages should be written when global default log level is set to INFO but local logger is TRACE", function () {
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
         logger.debug(TEST_LOG_STRING);
         expect(console.log.called).to.be.true;
@@ -82,7 +82,7 @@ describe('trace-log', function () {
     });
 
     it("includes the subModuleName when obtaining a sub logger from a logger.", function () {
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.INFO);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
         var subModuleLogger = logger.getSubModuleLogger(SUB_MODULE_NAME);
         subModuleLogger.debug(TEST_LOG_STRING);
@@ -96,7 +96,7 @@ describe('trace-log', function () {
 
 
     it("does substitution correctly.", function(){
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.DEBUG);
+        Logger.setGlobalDefaults(LIB_NAME, 'DEBUG');
         var logger = new Logger(TEST_LOG_NAME);
         var thing = 'thing';
         var statusCode = {statusCode:401, message: "oops"};
@@ -106,7 +106,7 @@ describe('trace-log', function () {
     });
 
     it("works if one arg passed.", function(){
-        Logger.setGlobalDefaults(LIB_NAME, Logger.LEVEL.DEBUG);
+        Logger.setGlobalDefaults(LIB_NAME, 'DEBUG');
         var logger = new Logger(TEST_LOG_NAME);
         var thing = 'thing';
         var statusCode = {statusCode:401, message: "oops"};
