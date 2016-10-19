@@ -113,4 +113,14 @@ describe('trace-log', function () {
         logger.info("The thing is", thing);
         expect(console.log.getCall(0).args[0]).to.contain(thing);
     });
+
+    it("works with multiple args in an array", function(){
+        Logger.setGlobalDefaults(LIB_NAME, 'DEBUG');
+        var logger = new Logger(TEST_LOG_NAME);
+        var name = 'Fred';
+        var person = { age: 26, hair_color:'brown'};
+        logger.info("Person named %s has data %j", [name, person]);
+        expect(console.log.getCall(0).args[0]).to.contain(name);
+        expect(console.log.getCall(0).args[0]).to.contain(JSON.stringify(person));
+    })
 });

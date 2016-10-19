@@ -82,13 +82,12 @@ class Logger {
             validLogLevel = this.localLogLevel;
         }
 
-        if((typeof args !== 'undefined') && (typeof args !== 'array')){
-            var newArgs = [args];
-            args = newArgs;
-        }
+        // If we have one arg that isn't an array then put it into an array so that we may
+        // us vsprintf
+        var sanArgs = [].concat( args );
 
         if(logLevel <= validLogLevel){
-            var providedLogMessage = vsprintf(template, args);
+            var providedLogMessage = vsprintf(template, sanArgs);
             var strLevel = "[" + this.getStringLogLevel(logLevel) + "] ";
             if(logLevel <= Logger.LEVEL.ERROR){
                 Logger.error(strLevel + " " + this.moduleName + ": " + providedLogMessage);
