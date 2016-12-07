@@ -1,6 +1,6 @@
 # trace-log
 
-Terrible name, but hey, hard to come up with a good name for a logging library. My motivation for writing this was to create a logging class that would wrap my calls to stdout or stderr and provide a context to the log message. e.g. rather than;
+Terrible name, but hey, it's hard to come up with a good name for a logging library. My motivation for writing this was to create a logging class that would wrap my calls to stdout or stderr and provide a context to the log message. e.g. rather than;
 
 ```
 // File testFile.js
@@ -63,7 +63,7 @@ To use in your code;
 var Logger = require('trace-log');
 
 #Set the libary name and global log level
-Logger.setGlobalDefaults("people-modeller", Logger.LEVEL.INFO);
+Logger.setGlobalDefaults("people-modeller", "TRACE");
 
 #Create a logger
 var logger = new Logger('Person.js');
@@ -76,13 +76,17 @@ var Person = function(name){
 module.export = Person;
 
 ```
-## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+### Log Levels 
 
-## Versioning
+The log level specified will limit the logging output to those log message made at that log level or more important. Valid log levels, ordered by importance, most important first;
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+* FATAL
+* ERROR
+* WARN
+* INFO
+* DEBUG
+* TRACE
 
 ## Authors
 
