@@ -1,6 +1,6 @@
 {
   "name": "trace-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provides logging with filename/method name helpers",
   "main": "trace-log.js",
   "scripts": {
