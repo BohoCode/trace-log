@@ -34,7 +34,7 @@ If cloning the repository manually you will need to run  `npm install` in the tr
 
 If installing as a dependency of something you're building run the following command in your project's route directory; that in which your package.json exists.
 
-`npm install --save github:BohoCode/trace-log`
+`npm install --save trace-log`
 
 
 ## Running the tests
@@ -45,15 +45,7 @@ There are some mocha tests included. To run these;
 This library also uses the 'debug' library and no logging will be made unless the environment variable `DEBUG` is set so that output will be made. For the purpose of running the tests you can enable all debug;
 `export DEBUG=*`
 
-### Break down into end to end tests
 
-Explain what these tests test and why
-
-```
-Give 
-
-an example
-```
 ## Usage
 To use in your code;
 
@@ -90,7 +82,7 @@ The log level specified will limit the logging output to those log message made 
 
 ## Authors
 
-* **Jamie Bowen** - *Initial work* - [BohoCode](https://github.com/BohoCode)
+* - *Initial work* - [BohoCode](https://github.com/BohoCode)
 
 See also the list of [contributors](https://github.com/BohoCode/trace-log/contributors) who participated in this project.
 
