@@ -22,7 +22,7 @@ var expect = require('chai').expect;
 var Logger = require("../trace-log");
 var sinon  = require("sinon");
 
-const LIB_NAME = "TestLibrary";
+const LIB_NAME = "marketplace";
 const TEST_LOG_STRING = "Test log string";
 const TEST_LOG_NAME = "TestModule";
 const SUB_MODULE_NAME = "SubModule";
@@ -33,11 +33,13 @@ describe('trace-log', function () {
     beforeEach(function () {
         sinon.stub(console, "log").returns(void 0);
         sinon.stub(console, "error").returns(void 0);
+        this.clock = sinon.useFakeTimers();
     });
 
     afterEach(function () {
         console.log.restore();
         console.error.restore();
+        this.clock.restore();
     });
 
     it("info log messages should be written when global default log level is set to INFO", function () {
@@ -72,7 +74,7 @@ describe('trace-log', function () {
 
     it("debug log messages should be written when global default log level is set to INFO but local logger is TRACE", function () {
         Logger.setGlobalDefaults(LIB_NAME, 'INFO');
-        var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
+        var logger = new Logger(TEST_LOG_NAME, 'TRACE');
         logger.debug(TEST_LOG_STRING);
         expect(console.log.called).to.be.true;
         expect(console.log.getCall(0).args[0]).to.contain(TEST_LOG_STRING);
@@ -82,8 +84,8 @@ describe('trace-log', function () {
     });
 
     it("includes the subModuleName when obtaining a sub logger from a logger.", function () {
-        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
-        var logger = new Logger(TEST_LOG_NAME, Logger.LEVEL.TRACE);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO', true);
+        var logger = new Logger(TEST_LOG_NAME, 'TRACE');
         var subModuleLogger = logger.getSubModuleLogger(SUB_MODULE_NAME);
         subModuleLogger.debug(TEST_LOG_STRING);
         expect(console.log.called).to.be.true;
@@ -91,7 +93,7 @@ describe('trace-log', function () {
         expect(console.log.getCall(0).args[0]).to.contain(LIB_NAME);
         expect(console.log.getCall(0).args[0]).to.contain(TEST_LOG_NAME);
         expect(console.log.getCall(0).args[0]).to.contain(SUB_MODULE_NAME);
-        expect(console.log.getCall(0).args[0]).to.contain("[DEBUG]")
+        expect(console.log.getCall(0).args[0]).to.contain("DEBUG")
     });
 
 
@@ -122,5 +124,16 @@ describe('trace-log', function () {
         logger.info("Person named %s has data %j", [name, person]);
         expect(console.log.getCall(0).args[0]).to.contain(name);
         expect(console.log.getCall(0).args[0]).to.contain(JSON.stringify(person));
+    })
+
+    it("Can output json", function(){
+        Logger.setGlobalDefaults(LIB_NAME, 'DEBUG', true);
+        var logger = new Logger(TEST_LOG_NAME);
+        var name = 'Fred';
+        var person = { age: 26, hair_color:"brown"};
+        logger.info("Person named %s has data %j", [name, person]);
+        var output = JSON.parse(console.log.getCall(0).args[0]);
+        expect(output.message).to.contain(name);
+        expect(output.message).to.contain(JSON.stringify(person));
     })
 });

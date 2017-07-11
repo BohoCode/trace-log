@@ -20,36 +20,61 @@
 /*jshint esversion: 6 */
 var vsprintf = require("sprintf-js").vsprintf;
 
+var dateHelper = {
+    pad : function(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    },
+
+    toISOString : function(date) {
+        return date.getUTCFullYear() +
+            '-' + this.pad(date.getUTCMonth() + 1) +
+            '-' + this.pad(date.getUTCDate()) +
+            'T' + this.pad(date.getUTCHours()) +
+            ':' + this.pad(date.getUTCMinutes()) +
+            ':' + this.pad(date.getUTCSeconds()) +
+            '.' + (date.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+            'Z';
+    }
+};
+
+
 class Logger {
 
-    static setGlobalDefaults(libraryName, logLevel) {
-        Logger.defaultLogLevel = Logger.LEVEL[logLevel];
-        if(typeof Logger.defaultLogLevel === 'undefined'){
+    static setGlobalDefaults(libraryName, logLevel, jsonOutput) {
+        var defaultLevel = Logger.LEVEL[logLevel];
+        if(typeof defaultLevel === 'undefined'){
             Console.error("Unrecognised logLevel " + logLevel + "Defaulting to INFO");
-            Logger.defaultLogLevel = Logger.LEVEL.INFO;
+            Logger.prototype.defaultLogLevel = Logger.LEVEL.INFO;
+        } else {
+            Logger.prototype.defaultLogLevel = defaultLevel;
         }
-        Logger.libraryName = libraryName;
-        Logger.debug = require('debug')(libraryName);
-        Logger.debug.log = console.log.bind(console);
-        Logger.error = require('debug')(libraryName);
-        Logger.error.log = console.error.bind(console);
+        Logger.prototype.libraryName = libraryName;
+        Logger.prototype.jsonOutput = jsonOutput;
+        Logger.prototype.debugLogger = require('debug')(libraryName);
+        Logger.prototype.debugLogger.log = console.log.bind(console);
+        Logger.prototype.errorLogger = require('debug')(libraryName);
+        Logger.prototype.errorLogger.log = console.error.bind(console);
     };
 
-    constructor(moduleName, localLogLevel){
+    constructor(moduleName, localLogLevel, outputJson){
         this.moduleName = moduleName;
         var logLevel = Logger.LEVEL[localLogLevel];
-        if(typeof localLogLevel !== 'undefined') {
+        if(typeof logLevel !== 'undefined') {
             this.localLogLevel = localLogLevel;
         }
-    }
+    };
 
     getSubModuleLogger(subModuleName, localLogLevel){
         var catSubModuleName = this.moduleName + ">" + subModuleName;
         var subModuleLogLevel = this.localLogLevel;
+        var subModuleJsonOutput = Logger.jsonOutput;
         if(typeof localLogLevel !== 'undefined'){
             subModuleLogLevel = localLogLevel;
         }
-        return new Logger(catSubModuleName, subModuleLogLevel);
+        return new Logger(catSubModuleName, subModuleLogLevel, subModuleJsonOutput);
     }
 
     trace(template, args){
@@ -73,13 +98,13 @@ class Logger {
     }
 
     fatal(template, args){
-        this.makeLogEntry(LEVEL.FATAL, template, args);
+        this.makeLogEntry(Logger.LEVEL.FATAL, template, args);
     }
 
     makeLogEntry(logLevel, template, args){
-        var validLogLevel = Logger.defaultLogLevel;
-        if(typeof this.localLogLevel !== 'undefined'){
-            validLogLevel = this.localLogLevel;
+        var validLogLevel = Logger.LEVEL[this.localLogLevel];
+        if(typeof validLogLevel === 'undefined'){
+            validLogLevel = this.defaultLogLevel;
         }
 
         // If we have one arg that isn't an array then put it into an array so that we may
@@ -89,10 +114,28 @@ class Logger {
         if(logLevel <= validLogLevel){
             var providedLogMessage = vsprintf(template, sanArgs);
             var strLevel = "[" + this.getStringLogLevel(logLevel) + "] ";
-            if(logLevel <= Logger.LEVEL.ERROR){
-                Logger.error(strLevel + " " + this.moduleName + ": " + providedLogMessage);
-            }else{
-                Logger.debug(strLevel + " " + this.moduleName + ": " + providedLogMessage);
+            let outputMessage;
+            if(this.jsonOutput){
+                let logObject = {
+                    level: this.getStringLogLevel(logLevel),
+                    logger_name: this.libraryName,
+                    module_name: this.moduleName,
+                    message: providedLogMessage
+                }
+                logObject['@timestamp'] = dateHelper.toISOString(new Date());
+                outputMessage = JSON.stringify(logObject);
+                if(logLevel <= Logger.LEVEL.ERROR){
+                    console.error(outputMessage);
+                } else {
+                    console.log(outputMessage);
+                }
+            } else {
+                outputMessage = strLevel + " " + this.moduleName + ": " + providedLogMessage;
+                if(logLevel <= Logger.LEVEL.ERROR){
+                    this.errorLogger(outputMessage);
+                }else{
+                    this.debugLogger(outputMessage);
+                }
             }
         }
     }
