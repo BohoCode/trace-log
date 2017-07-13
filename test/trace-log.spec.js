@@ -84,7 +84,7 @@ describe('trace-log', function () {
     });
 
     it("includes the subModuleName when obtaining a sub logger from a logger.", function () {
-        Logger.setGlobalDefaults(LIB_NAME, 'INFO', true);
+        Logger.setGlobalDefaults(LIB_NAME, 'INFO');
         var logger = new Logger(TEST_LOG_NAME, 'TRACE');
         var subModuleLogger = logger.getSubModuleLogger(SUB_MODULE_NAME);
         subModuleLogger.debug(TEST_LOG_STRING);

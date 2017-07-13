@@ -118,8 +118,7 @@ class Logger {
             if(this.jsonOutput){
                 let logObject = {
                     level: this.getStringLogLevel(logLevel),
-                    logger_name: this.libraryName,
-                    module_name: this.moduleName,
+                    logger_name: this.moduleName,
                     message: providedLogMessage
                 }
                 logObject['@timestamp'] = dateHelper.toISOString(new Date());

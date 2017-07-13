@@ -1,10 +1,10 @@
 {
   "name": "trace-log",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Provides logging with filename/method name helpers",
   "main": "trace-log.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha ./test/trace-log.spec.js"
+    "test": "mocha ./test/trace-log.spec.js"
   },
   "keywords": [
     "logging"
